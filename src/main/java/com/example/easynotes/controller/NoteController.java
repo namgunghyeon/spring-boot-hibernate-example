@@ -1,8 +1,9 @@
 package com.example.easynotes.controller;
 
+import com.example.easynotes.error.NotFoundError;
 import com.example.easynotes.exception.ResourceNotFoundException;
 import com.example.easynotes.model.Note;
-import com.example.easynotes.repository.NoteTwoRepository;
+import com.example.easynotes.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,19 @@ import java.util.List;
 public class NoteController {
 
     @Autowired
-    NoteTwoRepository noteRepository;
+    NoteRepository noteRepository;
+
+
+    //@Autowired
+    //public NoteController(NoteRepository noteRepository) {
+    //    this.noteRepository = noteRepository;
+    //}
+
 
     @GetMapping("/notes")
     public List<Note> getAllNotes() {
         //System.out.println(noteRepository.findTest(new Long(1)).getTitle());
-        noteRepository.findTest2("123");
+        //noteRepository.findTest2("123");
         return noteRepository.findAll();
     }
 
@@ -60,5 +68,26 @@ public class NoteController {
         noteRepository.delete(note);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/error1")
+    public List<Note> error1() {
+        throw new NotFoundError("error advice handler");
+    }
+
+    @GetMapping("/error2")
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public List<Note> error2() {
+        throw new NotFoundError("error ExceptionHandler");
+    }
+
+    @GetMapping("/error3")
+    public List<Note> error3() throws IllegalArgumentException {
+        throw new IllegalArgumentException("error IllegalArgumentException");
+    }
+
+    @GetMapping("/error4")
+    public List<Note> error4() throws Exception {
+        throw new Exception("error Exception");
     }
 }

@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface NoteTwoRepository extends JpaRepository<Note, Long>, NoteCustomRepository, NoteTestRepository {
+public interface NoteRepository extends JpaRepository<Note, Long> {
 }
