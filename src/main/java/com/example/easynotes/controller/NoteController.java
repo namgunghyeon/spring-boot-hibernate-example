@@ -1,14 +1,21 @@
 package com.example.easynotes.controller;
 
+import com.example.easynotes.error.InvalidParamter;
 import com.example.easynotes.error.NotFoundError;
 import com.example.easynotes.exception.ResourceNotFoundException;
 import com.example.easynotes.model.Note;
+import com.example.easynotes.repository.CustomNoteRepository;
 import com.example.easynotes.repository.NoteRepository;
+import com.example.easynotes.validate.NoteValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -21,22 +28,32 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
 
+    //@Autowired
+    //CustomNoteRepository customNoteRepository;
+
+    @Autowired
+    NoteValidator noteValidator;
+
 
     //@Autowired
     //public NoteController(NoteRepository noteRepository) {
     //    this.noteRepository = noteRepository;
     //}
 
-
     @GetMapping("/notes")
-    public List<Note> getAllNotes() {
+    public List<Note> getAllNotes(Pageable page) {
         //System.out.println(noteRepository.findTest(new Long(1)).getTitle());
         //noteRepository.findTest2("123");
-        return noteRepository.findAll();
+        Page<Note> result = noteRepository.findAll(page);
+        noteRepository.print();
+
+        return result.getContent();
     }
 
     @PostMapping("/notes")
     public Note createNote(@Valid @RequestBody Note note) {
+        noteValidator.validate(note);
+
         return noteRepository.save(note);
     }
 

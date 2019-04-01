@@ -25,8 +25,13 @@ public class JpaConfig {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private TestConfig config; //= new TestConfig();
+
     @Bean
     public DataSource dataSource() {
+        System.out.println(env);
+        config.testConfigRun();
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
         dataSource.setUrl(env.getProperty("jdbc.url"));
