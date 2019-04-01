@@ -1,21 +1,20 @@
 package com.example.easynotes.controller;
 
-import com.example.easynotes.error.InvalidParamter;
 import com.example.easynotes.error.NotFoundError;
 import com.example.easynotes.exception.ResourceNotFoundException;
+import com.example.easynotes.model.Book;
+import com.example.easynotes.model.BookCategory;
 import com.example.easynotes.model.Note;
-import com.example.easynotes.repository.CustomNoteRepository;
-import com.example.easynotes.repository.NoteRepository;
+import com.example.easynotes.model.Pencil;
+import com.example.easynotes.repository.*;
 import com.example.easynotes.validate.NoteValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -28,8 +27,14 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
 
-    //@Autowired
-    //CustomNoteRepository customNoteRepository;
+    @Autowired
+    PencilRepository pencilRepository;
+
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    BookCategoryRepository bookCategoryRepository;
 
     @Autowired
     NoteValidator noteValidator;
@@ -46,6 +51,7 @@ public class NoteController {
         //noteRepository.findTest2("123");
         Page<Note> result = noteRepository.findAll(page);
         noteRepository.print();
+        //return noteRepository.findAllJoinFetch();
 
         return result.getContent();
     }
@@ -54,7 +60,30 @@ public class NoteController {
     public Note createNote(@Valid @RequestBody Note note) {
         noteValidator.validate(note);
 
+        Pencil pencil = new Pencil();
+        //pencil.setId(1L);
+        pencil.setTitle("연필");
+
+        //pencilRepository.save(pencil);
+        note.addPencil(pencil);
+
         return noteRepository.save(note);
+    }
+
+    @PostMapping("/bookCategory")
+    public BookCategory createBookcategory(@Valid @RequestBody Note note) {
+        BookCategory  bookCategory = bookCategoryRepository.
+                save(new BookCategory("Category 1", new Book("Hello Koding 1"), new Book("Hello Koding 2")));
+
+        System.out.println(bookCategory.getBooks().size());
+
+        return bookCategory;
+    }
+
+    @GetMapping("/bookCategory")
+    public List<BookCategory> getBookcategory(@Valid @RequestBody Note note) {
+        return bookCategoryRepository.findAll();
+
     }
 
     @GetMapping("/notes/{id}")
