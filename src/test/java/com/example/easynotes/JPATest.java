@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -33,9 +34,12 @@ public class JPATest {
 
         bookCategory.setBooks(new HashSet<>(Arrays.asList(book1)));
 
-        Assert.assertEquals("Check Order size",1, bookCategory.getBooks().size());
-        System.out.println(bookCategoryRepository);
+        Assert.assertEquals("Check Book size",1, bookCategory.getBooks().size());
         bookCategoryRepository.save(bookCategory);
+
+        List<BookCategory> bookCategories = bookCategoryRepository.findAllJoinFetch();
+        Assert.assertEquals("Check Inserted bookCategory size",1, bookCategories.size());
+        Assert.assertEquals("Check Inserted book size",1, bookCategories.get(0).getBooks().size());
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.example.easynotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class BookCategory {
 
     @OneToMany(mappedBy = "bookCategory", cascade = CascadeType.ALL)
     //@JsonIgnore
+    @Fetch(FetchMode.JOIN)
     private Set<Book> books;
 
     public BookCategory(String name, Book... books) {
