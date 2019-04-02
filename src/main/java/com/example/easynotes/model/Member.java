@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="member_id")
     private int id;
 
     private String name;

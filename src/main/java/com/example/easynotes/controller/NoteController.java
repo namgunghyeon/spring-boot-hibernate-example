@@ -1,5 +1,6 @@
 package com.example.easynotes.controller;
 
+import com.example.easynotes.dto.BookCategoryDTO;
 import com.example.easynotes.error.NotFoundError;
 import com.example.easynotes.exception.ResourceNotFoundException;
 import com.example.easynotes.model.Book;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by rajeevkumarsingh on 27/06/17.
@@ -71,18 +73,20 @@ public class NoteController {
     }
 
     @PostMapping("/bookCategory")
-    public BookCategory createBookcategory(@Valid @RequestBody Note note) {
+    public BookCategoryDTO createBookcategory(@Valid @RequestBody Note note) {
         BookCategory  bookCategory = bookCategoryRepository.
                 save(new BookCategory("Category 1", new Book("Hello Koding 1"), new Book("Hello Koding 2")));
 
         System.out.println(bookCategory.getBooks().size());
 
-        return bookCategory;
+        return new BookCategoryDTO(bookCategory);
     }
 
     @GetMapping("/bookCategory")
-    public List<BookCategory> getBookcategory(@Valid @RequestBody Note note) {
-        return bookCategoryRepository.findAll();
+    public List<BookCategoryDTO> getBookcategory(@Valid @RequestBody Note note) {
+        List<BookCategory> bookCategories = bookCategoryRepository.findAll();
+
+        return bookCategories.stream().map(bookCategory -> new BookCategoryDTO(bookCategory)).collect(Collectors.toList());
 
     }
 

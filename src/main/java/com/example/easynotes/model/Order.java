@@ -3,13 +3,14 @@ package com.example.easynotes.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name="order")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public int getId() {

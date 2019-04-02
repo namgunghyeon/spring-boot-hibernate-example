@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
+@Table(name="book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,11 @@ public class Book {
     public Book(){}
 
     public Book(String name) {
+        this.name = name;
+    }
+
+    public Book(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
