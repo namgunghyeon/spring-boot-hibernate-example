@@ -1,5 +1,8 @@
 package com.example.easynotes.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +17,8 @@ public class Member {
 
     private String name;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private List<Order> orders = new ArrayList<>();
 
     public int getId() {

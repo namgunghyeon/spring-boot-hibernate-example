@@ -5,6 +5,8 @@ import com.example.easynotes.model.BookCategory;
 import com.example.easynotes.model.Member;
 import com.example.easynotes.model.Order;
 import com.example.easynotes.repository.BookCategoryRepository;
+import com.example.easynotes.repository.MemberRepository;
+import com.example.easynotes.repository.OrderRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +24,12 @@ import java.util.List;
 public class JPATest {
     @Autowired
     private BookCategoryRepository bookCategoryRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     public void bookCategory() {
@@ -44,12 +52,18 @@ public class JPATest {
 
     @Test
     public void orders() {
+        Order order = new Order();
         Member member = new Member();
         member.setName("member");
 
-        Order order = new Order();
         order.setMember(member);
 
         Assert.assertEquals("Check Order size",1, member.getOrders().size());
+
+        memberRepository.save(member);
+
+        List<Member> members = memberRepository.findAll();
+        Assert.assertEquals("Check Inserted member size",1, members.size());
+        Assert.assertEquals("Check Inserted order size",1, members.get(0).getOrders().size());
     }
 }
