@@ -1,6 +1,7 @@
 package com.example.easynotes.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -18,7 +19,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "com.example.easynotes.repository")
-@PropertySource("classpath:persistence-student.properties")
+@PropertySource("classpath:application.yml")
 @EnableTransactionManagement
 public class JpaConfig {
 
@@ -28,15 +29,16 @@ public class JpaConfig {
     @Autowired
     private TestConfig config; //= new TestConfig();
 
+
     @Bean
     public DataSource dataSource() {
-        System.out.println(env);
         config.testConfigRun();
+
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
+        dataSource.setDriverClassName(env.getProperty("spring.datasource.driverClassName"));
+        dataSource.setUrl(env.getProperty("spring.datasource.url"));
+        dataSource.setUsername(env.getProperty("spring.datasource.user"));
+        dataSource.setPassword(env.getProperty("spring.datasource.pass"));
 
         return dataSource;
     }
@@ -61,12 +63,12 @@ public class JpaConfig {
     final Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
 
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("hibernate.cache.use_second_level_cache"));
-        hibernateProperties.setProperty("hibernate.cache.region.factory_class", env.getProperty("hibernate.cache.region.factory_class"));
-        hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("spring.hibernate.hbm2ddl.auto"));
+        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("spring.hibernate.dialect"));
+        hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("spring.hibernate.show_sql"));
+        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("spring.hibernate.cache.use_second_level_cache"));
+        hibernateProperties.setProperty("hibernate.cache.region.factory_class", env.getProperty("spring.hibernate.cache.region.factory_class"));
+        hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("spring.hibernate.cache.use_query_cache"));
 
         return hibernateProperties;
     }
