@@ -1,6 +1,7 @@
 package com.example.easynotes.controller;
 
 import com.example.easynotes.dto.BookCategoryDTO;
+import com.example.easynotes.dto.BookCategoryMapperDTO;
 import com.example.easynotes.error.NotFoundError;
 import com.example.easynotes.exception.ResourceNotFoundException;
 import com.example.easynotes.model.Book;
@@ -9,13 +10,16 @@ import com.example.easynotes.model.Note;
 import com.example.easynotes.model.Pencil;
 import com.example.easynotes.repository.*;
 import com.example.easynotes.validate.NoteValidator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +44,14 @@ public class NoteController {
 
     @Autowired
     NoteValidator noteValidator;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
 
     //@Autowired
@@ -73,13 +85,14 @@ public class NoteController {
     }
 
     @PostMapping("/bookCategory")
-    public BookCategoryDTO createBookcategory(@Valid @RequestBody Note note) {
+    public BookCategoryMapperDTO createBookcategory(@Valid @RequestBody Note note) {
         BookCategory  bookCategory = bookCategoryRepository.
                 save(new BookCategory("Category 1", new Book("Hello Koding 1"), new Book("Hello Koding 2")));
 
         System.out.println(bookCategory.getBooks().size());
+        BookCategoryMapperDTO bookCategoryMapperDTO = modelMapper.map(bookCategory, BookCategoryMapperDTO.class);
 
-        return new BookCategoryDTO(bookCategory);
+        return bookCategoryMapperDTO;
     }
 
     @GetMapping("/bookCategory")
