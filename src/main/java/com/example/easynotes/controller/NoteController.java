@@ -54,18 +54,11 @@ public class NoteController {
     }
 
 
-    //@Autowired
-    //public NoteController(NoteRepository noteRepository) {
-    //    this.noteRepository = noteRepository;
-    //}
 
     @GetMapping("/notes")
     public List<Note> getAllNotes(Pageable page) {
-        //System.out.println(noteRepository.findTest(new Long(1)).getTitle());
-        //noteRepository.findTest2("123");
         Page<Note> result = noteRepository.findAll(page);
         noteRepository.print();
-        //return noteRepository.findAllJoinFetch();
 
         return result.getContent();
     }
@@ -75,10 +68,8 @@ public class NoteController {
         noteValidator.validate(note);
 
         Pencil pencil = new Pencil();
-        //pencil.setId(1L);
         pencil.setTitle("연필");
 
-        //pencilRepository.save(pencil);
         note.addPencil(pencil);
 
         return noteRepository.save(note);
